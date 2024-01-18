@@ -1,9 +1,9 @@
-import React from "react";
+import Body from "./components/Body";
 
 function App() {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-green-500">Hello World!</h1>
+      <Body />
     </div>
   );
 }
