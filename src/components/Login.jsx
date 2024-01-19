@@ -7,9 +7,12 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState("signin");
+  const navigate = useNavigate(); // use to navigate to another path
+  // result - for storing the error message - validation error or firebase authentication
   const [result, setResult] = useState("");
   const nameRef = useRef(null);
   const emailRef = useRef(null);
@@ -38,6 +41,7 @@ const Login = () => {
           // Signed up
           const user = userCredential.user;
           console.log(user);
+          navigate("/browse");
           // ...
         })
         .catch((error) => {
@@ -58,12 +62,17 @@ const Login = () => {
           const user = userCredential.user;
           console.log("signed in!");
           console.log(user);
-          // ...
+          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorCode + " " + errorMessage);
+          //   console.log(errorCode);
+          //   console.log(errorMessage);
+          // Not checking particularly if email or password is invalid to hide the specific field invalidity to make it confidential
+          if (errorCode === "auth/invalid-credential") {
+            setResult("Email or password is invalid!");
+          }
         });
     }
   };

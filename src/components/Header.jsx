@@ -13,6 +13,7 @@ const Header = () => {
           <img className="top-4 left-4 w-44" src={LOGO} alt="logo" />
         </Link>
       </div>
+
       {path === "/login" ? (
         <></>
       ) : (
