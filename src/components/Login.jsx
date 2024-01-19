@@ -1,9 +1,72 @@
 import Header from "./Header";
 import { LANDING_BACKGROUND_IMAGE } from "../utils/constants";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import validateForm from "../utils/validateForm";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState("signin");
+  const [result, setResult] = useState("");
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const handleAuthentication = () => {
+    // validating the form data
+    const result = validateForm(
+      emailRef.current.value,
+      passwordRef.current.value
+    );
+    setResult(result);
+
+    // If the result is something means it has some error from validateForm.js
+    if (result) return;
+
+    // If the result has no value means null, then login or signup
+    if (!isSignIn) {
+      // signup logic
+      createUserWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setResult(errorCode + "-" + errorMessage);
+          // ..
+        });
+    } else {
+      // signin logic
+      signInWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log("signed in!");
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode + " " + errorMessage);
+        });
+    }
+  };
 
   const toggleSignInForm = () => {
     setIsSignIn(!isSignIn);
@@ -17,8 +80,15 @@ const Login = () => {
         <div className="absolute inset-0 bg-black opacity-60"></div>
       </div>
 
+      {result && (
+        <div className="z-30 fixed top-14 left-1/2 transform -translate-x-1/2 w-96 bg-[#E50914] text-white py-2 text-center rounded font-semibold bg-opacity-70">
+          <p>{result}</p>
+        </div>
+      )}
+
       {/* login form */}
       <form
+        onSubmit={(e) => e.preventDefault()}
         action=""
         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black px-14 py-14 rounded-sm flex flex-col w-96 text-white bg-opacity-70"
       >
@@ -30,23 +100,29 @@ const Login = () => {
             <></>
           ) : (
             <input
-              type="email"
+              ref={nameRef}
+              type="text"
               placeholder="Full Name"
               className="px-4 py-3 bg-[#333333] text-sm"
             />
           )}
           <input
-            type="email"
+            ref={emailRef}
+            type="text"
             placeholder="Email or phone number"
             className="px-4 py-3 bg-[#333333] text-sm"
           />
           <input
+            ref={passwordRef}
             type="password"
             placeholder="Password"
             className="px-4 py-3 bg-[#333333] text-sm"
           />
         </div>
-        <button className="bg-[#E50914] hover:bg-[#bd2525] duration-300 px-4 py-3 top-1/2 text-white font-medium text-sm rounded mb-3">
+        <button
+          className="bg-[#E50914] hover:bg-[#bd2525] duration-300 px-4 py-3 top-1/2 text-white font-medium text-sm rounded mb-3"
+          onClick={handleAuthentication}
+        >
           {isSignIn ? "Sign In" : "Sign Up"}
         </button>
 

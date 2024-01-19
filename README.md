@@ -6,6 +6,8 @@
 
   - Always redirect to the landing page when not authenticated
   - Login/Signup page
+    - Validation using Formik (form validation library)
+    - Firebase for storing data and deployment
   - Language button
 
 - Browse page (when authenticated)
