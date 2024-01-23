@@ -4,7 +4,6 @@
 // The return statements determine the new state of the user slice, and the state parameter in the reducer represents the current state, which is updated based on the returned value. The initialState is used when the slice is first created or reset.
 
 import { createSlice } from "@reduxjs/toolkit";
-import { useReducer } from "react";
 
 const userSlice = createSlice({
     name: 'user',

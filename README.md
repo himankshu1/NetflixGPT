@@ -18,9 +18,17 @@
 
   - Header
   - Main movie trailer - Title, description, play button, Trailer in background
+    - Registered for TMDB API, configured the API and the authentication in constants.jsx and API call in Browse.jsx
+    - Build now playing movie store and background movie trailer container with TMDB API and Youtube embedd
   - Movie suggestions
     - Categories - Movies list on horizontal scroll
 
 - Netflix GPT
+
   - Search bar
   - Movie suggestions
+
+- Bug Fixes and enhancement
+  - Accessing browse page without authentication - Fixed (Using navigate() with onAuthStateChanged in HeaderLoggedIn)
+  - Display name update just after signup/login - Fixed (Dispatching displayName to Redux store inside updateProfile in Login.jsx)
+  - Unscubscribed to the onAuthStateChanged callback

@@ -5,12 +5,15 @@ import validateForm from "../utils/validateForm";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
-  const [isSignIn, setIsSignIn] = useState("signin");
+  const [isSignIn, setIsSignIn] = useState(true);
+  const dispatch = useDispatch();
   const navigate = useNavigate(); // use to navigate to another path
   // result - for storing the error message - validation error or firebase authentication
   const [result, setResult] = useState("");
@@ -21,6 +24,7 @@ const Login = () => {
   const handleAuthentication = () => {
     // validating the form data
     const result = validateForm(
+      nameRef.current ? nameRef.current.value : null,
       emailRef.current.value,
       passwordRef.current.value
     );
@@ -40,6 +44,24 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          // updating the full name to firebase of a user
+          updateProfile(user, {
+            displayName: nameRef.current.value,
+          })
+            .then(() => {
+              // Profile updated!
+              // dispatching the user details again (first time doing in Body.jsx) as Login.jsx is rendered after Body.jsx and so after doing updateProfile() for displayName, we need to push the data to the Redux store. If not done then the displayName will not be available in the Redux store.
+              const { uid, email, displayName } = auth.currentUser;
+              dispatch(
+                addUser({ uid: uid, email: email, displayName: displayName })
+              );
+              navigate("/browse");
+              // ...
+            })
+            .catch((error) => {
+              // An error occurred
+              // ...
+            });
           console.log(user);
           navigate("/browse");
           // ...
