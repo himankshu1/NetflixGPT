@@ -19,7 +19,7 @@
   - Header
   - Main movie trailer - Title, description, play button, Trailer in background
     - Registered for TMDB API, configured the API and the authentication in constants.jsx and API call in Browse.jsx
-    - Build now playing movie store and background movie trailer container with TMDB API and Youtube embedd
+    - Build now playing movie store and background movie trailer container with TMDB API and Youtube embedd with autoplay. Created custom hooks for movies with TMDB API
   - Movie suggestions
     - Categories - Movies list on horizontal scroll
 
